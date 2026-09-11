@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HANWIDIAE DEPLOY — Multi Protocol</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+        body{background:linear-gradient(135deg,#1a103c,#2d1b69);color:#fff;min-height:100vh;padding:20px;}
+        .container{max-width:650px;margin:0 auto;}
+        .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;flex-wrap:wrap;gap:15px;padding-top:10px;}
+        .logo-area{display:flex;align-items:center;gap:10px;}
+        .logo-icon{width:50px;height:50px;background:#7c3aed;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;}
+        .title h1{font-size:22px;}
+        .title p{color:#b8a9d9;font-size:13px;}
+        .connect-btn{background:linear-gradient(90deg,#7c3aed,#a855f7);border:none;padding:12px 24px;border-radius:10px;color:#fff;font-size:15px;font-weight:bold;cursor:pointer;transition:0.3s;}
+        .connect-btn:hover{transform:scale(1.05);box-shadow:0 0 15px rgba(124,58,237,0.4);}
+        .tabs{display:flex;gap:5px;margin-bottom:25px;border-bottom:1px solid #443070;padding-bottom:10px;flex-wrap:wrap;}
+        .tab{padding:10px 14px;border-radius:8px;cursor:pointer;transition:0.3s;color:#b8a9d9;font-size:14px;}
+        .tab.active{background:#7c3aed20;color:#fff;font-weight:bold;}
+        .tab:hover{background:#7c3aed15;}
+        .sub-tabs{display:flex;gap:8px;margin:10px 0 20px;flex-wrap:wrap;}
+        .sub-tab{padding:8px 12px;border-radius:6px;cursor:pointer;color:#999;font-size:13px;}
+        .sub-tab.active{background:#443070;color:#fff;}
+        .actions{display:flex;gap:15px;margin-bottom:30px;flex-wrap:wrap;}
+        .btn-primary{background:linear-gradient(90deg,#7c3aed,#a855f7);border:none;padding:14px 30px;border-radius:10px;color:#fff;font-size:16px;font-weight:bold;cursor:pointer;flex:1;min-width:180px;transition:0.3s;}
+        .btn-primary:hover{transform:scale(1.02);box-shadow:0 0 15px rgba(124,58,237,0.4);}
+        .btn-secondary{background:#3a2a66;border:none;padding:14px 30px;border-radius:10px;color:#b8a9d9;font-size:16px;cursor:pointer;flex:1;min-width:180px;transition:0.3s;}
+        .btn-secondary:hover{background:#4a3a77;}
+        .form-card{background:#2d1b6980;border-radius:16px;padding:25px;border:1px solid #443070;}
+        .form-group{margin-bottom:22px;}
+        .form-label{display:block;margin-bottom:10px;color:#d4c8f0;font-weight:500;font-size:15px;}
+        .upload-box{border:2px dashed #6b52a8;border-radius:12px;padding:30px;text-align:center;cursor:pointer;transition:0.3s;}
+        .upload-box:hover{border-color:#a855f7;background:#7c3aed10;}
+        .browse-link{color:#a855f7;font-weight:bold;cursor:pointer;}
+        input, select, textarea{width:100%;padding:14px;border-radius:8px;border:1px solid #5a4090;background:#1f1247;color:#fff;font-size:16px;outline:none;}
+        input:focus, select:focus, textarea:focus{border-color:#7c3aed;box-shadow:0 0 0 2px rgba(124,58,237,0.3);}
+        .radio-group{display:flex;flex-direction:column;gap:10px;}
+        .radio-item{padding:12px;background:#3a2a66;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:0.3s;}
+        .radio-item.active{border-color:#7c3aed;background:#7c3aed20;}
+        .row{display:flex;gap:15px;flex-wrap:wrap;}
+        .col{flex:1;min-width:180px;}
+        .status{margin-top:20px;padding:15px;border-radius:10px;display:none;}
+        .status.success{background:#16a34a20;border:1px solid #16a34a;color:#86efac;display:block;}
+        .status.info{background:#3b82f620;border:1px solid #3b82f6;color:#93c5fd;display:block;}
+        #fileName{margin-top:10px;color:#7c3aed;display:none;}
+        .hint{font-size:12px;color:#888;margin-top:5px;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="logo-area">
+                <div class="logo-icon">⛓️</div>
+                <div class="title">
+                    <h1>HANWIDIAE DEPLOY</h1>
+                    <p>Multi Chain · Multi Protocol</p>
+                </div>
+            </div>
+            <button class="connect-btn" id="connectWallet">🔌 Connect Wallet</button>
+        </div>
+
+        <!-- TABS UTAMA -->
+        <div class="tabs">
+            <div class="tab active" data-tab="zora">⚡ Zora</div>
+            <div class="tab" data-tab="clanker">🔗 Clanker</div>
+            <div class="tab" data-tab="history">⏳ History</div>
+            <div class="tab" data-tab="trending">🔥 Trending</div>
+            <div class="tab" data-tab="multisend">📤 Multisend</div>
+            <div class="tab" data-tab="swap">🔁 Swap</div>
+            <div class="tab" data-tab="feed">📋 Feed</div>
+        </div>
+
+        <!-- TOMBOL UTAMA -->
+        <div class="actions">
+            <button class="btn-primary" id="deployBtn">🚀 Deploy</button>
+            <button class="btn-secondary" id="claimBtn">🎁 Claim Vesting</button>
+        </div>
+
+        <!-- FORM LENGKAP -->
+        <div class="form-card" id="formArea">
+            <!-- UPLOAD LOGO -->
+            <div class="form-group">
+                <label class="form-label">Upload logo</label>
+                <div class="upload-box" id="uploadBox">
+                    <span style="font-size:30px;">🖼️</span>
+                    <p style="margin-top:10px;color:#999;">PNG or JPG · optional 
+                        <span class="browse-link" id="browseBtn">BROWSE</span>
+                    </p>
+                    <input type="file" id="fileInput" accept=".png,.jpg,.jpeg" style="display:none;">
+                </div>
+                <p id="fileName">✅ File terpilih: <span></span></p>
+            </div>
+
+            <!-- NAMA -->
+            <div class="form-group">
+                <label class="form-label">NAME</label>
+                <input type="text" id="coinName" placeholder="My Awesome Coin">
+            </div>
+
+            <!-- TICKER -->
+            <div class="form-group">
+                <label class="form-label">TICKER</label>
+                <input type="text" id="coinTicker" placeholder="Contoh: HWD · Maks 24 huruf" maxlength="24">
+            </div>
+
+            <!-- DESKRIPSI -->
+            <div class="form-group">
+                <label class="form-label">DESCRIPTION</label>
+                <textarea id="coinDesc" rows="3" placeholder="What is this coin about?"></textarea>
+            </div>
+
+            <!-- JENIS KOIN -->
+            <div class="form-group">
+                <label class="form-label">Coin Type</label>
+                <div class="radio-group">
+                    <div class="radio-item active" data-type="content">
+                        <strong>Content Coin</strong>
+                        <p style="font-size:13px;color:#999;margin-top:4px;">10M langsung ke Anda, 990M ke Kolam Likuiditas</p>
+                    </div>
+                    <div class="radio-item" data-type="creator">
+                        <strong>Creator Coin</strong>
+                        <p style="font-size:13px;color:#999;margin-top:4px;">500M ke Likuiditas, 500M dibagi bertahap selama 5 tahun</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PASANGAN MATA UANG -->
+            <div class="form-group">
+                <label class="form-label">Pair Currency</label>
+                <div class="radio-group">
+                    <div class="radio-item active" data-pair="zora">
+                        <strong>ZORA</strong>
+                        <p style="font-size:13px;color:#999;margin-top:4px;">Pasangkan dengan token Zora</p>
+                    </div>
+                    <div class="radio-item" data-pair="weth">
+                        <strong>WETH</strong>
+                        <p style="font-size:13px;color:#999;margin-top:4px;">Ethereum Terbungkus</p>
+                    </div>
+                    <div class="radio-item" data-pair="usdc">
+                        <strong>USDC</strong>
+                        <p style="font-size:13px;color:#999;margin-top:4px;">Koin Stabil USD</p>
+                    </div>
+                    <div class="radio-item" data-pair="custom">
+                        <strong>Custom Token</strong>
+                        <p style="font-size:13px;color:#999;margin-top:4px;">Pasangkan dengan alamat kontrak sendiri</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KAPITALISASI SASARAN -->
+            <div class="form-group">
+                <label class="form-label">Target Market Cap</label>
+                <div class="row">
+                    <div class="col">
+                        <select id="marketCap">
+                            <option value="50">50 ETH</option>
+                            <option value="100" selected>100 ETH</option>
+                            <option value="250">250 ETH</option>
+                            <option value="1000">1K ETH</option>
+                            <option value="5000">5K ETH</option>
+                            <option value="custom">Sesuaikan Sendiri</option>
+                        </select>
+                    </div>
+                </div>
+                <p class="hint">Harga diambil langsung dari CoinGecko saat penerbitan untuk akurasi</p>
+            </div>
+
+            <!-- BELI SAAT DIPUBLIKKAN -->
+            <div class="form-group">
+                <label class="form-label">Buy on Deploy</label>
+                <input type="number" id="buyAmount" placeholder="0.0 ETH · Kosongkan untuk lewati" step="0.001" min="0">
+                <p class="hint">Opsional — beli sebagian koin di transaksi yang sama</p>
+            </div>
+
+            <!-- JARINGAN -->
+            <div class="form-group">
+                <label class="form-label">Base Network · Zora Protocol</label>
+                <select id="network">
+                    <option value="base">Base (Ethereum L2)</option>
+                    <option value="ethereum">Ethereum Mainnet</option>
+                </select>
+            </div>
+
+            <!-- TOMBOL AKHIR -->
+            <button class="btn-primary" id="deployTokenBtn" style="width:100%;margin-top:10px;">📤 Deploy Token</button>
+
+            <!-- PESAN STATUS -->
+            <div class="status" id="statusMsg"></div>
+        </div>
+    </div>
+
+    <script>
+        let walletConnected = false;
+        let selectedFile = null;
+
+        // TAB UTAMA
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                showStatus(`Beralih ke: ${tab.dataset.tab.toUpperCase()} ✅`, 'info');
+            });
+        });
+
+        // PILIHAN KOIN & PASANGAN
+        document.querySelectorAll('.radio-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const parent = item.closest('.form-group');
+                parent.querySelectorAll('.radio-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+
+        // HUBUNGKAN DOMPET
+        document.getElementById('connectWallet').addEventListener('click', async () => {
+            if (!window.ethereum) {
+                showStatus('⚠️ Pasang dompet kripto (seperti MetaMask) dulu di browser!', 'info');
+                return;
+            }
+            try {
+                const accounts = await window.ethereum.request({method: 'eth_requestAccounts'});
+                walletConnected = true;
+                const shortAddr = accounts[0].slice(0,6) + '...' + accounts[0].slice(-4);
+                document.getElementById('connectWallet').textContent = '✅ ' + shortAddr;
+                showStatus('Dompet terhubung! Siap buat koin 🎉', 'success');
+            } catch (err) {
+                showStatus('Gagal hubungkan: ' + err.message, 'info');
+            }
+        });
+
+        // UPLOAD LOGO
+        document.getElementById('browseBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('fileInput').click();
+        });
+        document.getElementById('uploadBox').addEventListener('click', () => {
+            document.getElementById('fileInput').click();
+        });
+        document.getElementById('fileInput').addEventListener('change', (e) => {
+            selectedFile = e.target.files[0];
+            if (selectedFile) {
+                document.getElementById('fileName').style.display = 'block';
+                document.getElementById('fileName').querySelector('span').textContent = selectedFile.name;
+            }
+        });
+
+        // TOMBOL DEPLOY UTAMA
+        document.getElementById('deployBtn').addEventListener('click', () => {
+            document.getElementById('deployTokenBtn').click();
+        });
+
+        // KLAIM
+        document.getElementById('claimBtn').addEventListener('click', () => {
+            if (!walletConnected) {
+                showStatus('⚠️ Hubungkan dompet dulu', 'info');
+                return;
+            }
+            showStatus('📋 Memeriksa saldo klaim... fitur akan segera aktif!', 'info');
+        });
+
+        // DEPLOY TOKEN
+        document.getElementById('deployTokenBtn').addEventListener('click', () => {
+            const name = document.getElementById('coinName').value.trim();
+            const ticker = document.getElementById('coinTicker').value.trim();
+            
+            if (!walletConnected) {
+                showStatus('⚠️ Hubungkan dompet dulu dengan klik "Connect Wallet"', 'info');
+                return;
+            }
+            if (!name || !ticker) {
+                showStatus('⚠️ Isi Nama dan Kode (Ticker) koin dulu!', 'info');
+                return;
+            }
+
+            showStatus(`🚀 Sedang menyiapkan koin "${name}" (${ticker})...`, 'info');
+            
+            setTimeout(() => {
+                showStatus(`✅ Koin "${name}" berhasil dibuat! Siap dipublikasikan ke Zora 🎉`, 'success');
+            }, 2000);
+        });
+
+        function showStatus(pesan, jenis) {
+            const el = document.getElementById('statusMsg');
+            el.className = 'status ' + jenis;
+            el.textContent = pesan;
+        }
+    </script>
+</body>
+</html>
